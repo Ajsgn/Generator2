@@ -1,0 +1,130 @@
+#*
+ * Copyright (c) 2017, Ajsgn 杨光 (Ajsgn@foxmail.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *#
+package ${_basePackage};
+
+import java.util.List;
+
+import org.apache.ibatis.exceptions.TooManyResultsException;
+
+/**
+ * <p>服务接口的抽象实现</p>
+ * @ClassName: AbstractDaoImpl
+ * @Description: <p>服务接口的抽象实现</p>
+ * @author Generator2
+ * @date ${_createDate}
+ * @param <E> Element 查询结果返回类型元素
+ * @param <C> daoCondition 查询条件
+ * @param <D> dao 数据层操作支持
+ */
+public abstract class AbstractDaoImpl<E, C extends DaoCondition, M extends BaseMapper<E, C>> implements BaseDao<E, C> {
+	
+	@Override
+	public int updateById(E entity) {
+		return daoMapperSupport().updateById(entity);
+	}
+
+	@Override
+	public List<E> selectAll() {
+		C daoCondition = blankCondition();
+		return selectList(daoCondition);
+	}
+	
+	@Override
+	public int insert(E entity) {
+		return daoMapperSupport().insert(entity);
+	}
+	
+	/**
+	 * <p>查询一个符合条件的记录，即查询一条数据记录，如果有多条符合条件的结果，则返回第一条</p>
+	 * <p>这个方法的思想，在于只希望获取一个对象，如果获取对象，说明查询条件的唯一索引没有成功建立！是否需要抛异常，自行修改~</p>
+	 * @Title: selectFirst
+	 * @Description: 查询一个符合条件的记录
+	 * @param daoCondition 查询条件
+	 * @return E 查询结果
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	@Override
+	public E selectFirst(C daoCondition){
+		E result = null;
+		List<E> list = selectList(daoCondition);
+		if(null != list && false == list.isEmpty()){
+			result = list.get(0);
+		}
+		return result;
+	}
+
+	
+	/**
+	 * <p>查询一个符合条件的记录，即查询一条数据记录，如果有多条符合条件的结果，则返回第一条</p>
+	 * <p>如果查询出的结果为多个结果集，则抛出TooManyResultsException异常</p>
+	 * @Title: selectFirst
+	 * @Description: 查询一个符合条件的记录
+	 * @param daoCondition 查询条件
+	 * @return E 查询结果
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	@Override
+	public E selectOne(C daoCondition) {
+		E result = null;
+		List<E> list = selectList(daoCondition);
+		if(null != list && list.size() > 1){
+			throw new TooManyResultsException();
+		} else {
+			if(1 == list.size())
+				result = list.get(0);
+		}
+		return result;
+	}
+	
+	/**
+	 * <p>查询一个结果集合</p>
+	 * @Title: selectList
+	 * @Description: 查询一个结果集合
+	 * @param daoCondition 查询条件
+	 * @return List<E> 查询结果
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	@Override
+	public List<E> selectList(C daoCondition){
+		M mapper = daoMapperSupport();
+		return mapper.selectByCondition(daoCondition);
+	}
+	
+	/**
+	 * <p>DAO对象提供支持</p>
+	 * <p>因为是抽象类，不在spring环境下，所有，由子类自身提供操作对象</p>
+	 * @Title: daoMapperSupport
+	 * @Description: dao mapper 对象提供支持
+	 * @return M mapper操作对象
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	protected abstract M daoMapperSupport();
+	
+	/**
+	 * <p>提供一个空白的查询条件</p>
+	 * @Title: blankCondition
+	 * @Description: 提供一个空白的查询条件
+	 * @return C 一个空白条件的查询条件
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	protected abstract C blankCondition();
+
+}

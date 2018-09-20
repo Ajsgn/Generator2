@@ -1,0 +1,93 @@
+#*
+ * Copyright (c) 2018, Ajsgn 杨光 (Ajsgn@foxmail.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *#
+package ${_basePackage};
+
+import java.util.List;
+
+/**
+ * <p>数据层的基础操作</p>
+ * @ClassName: BaseDao
+ * @Description: 数据层的基础操作
+ * @author Generator2
+ * @date ${_createDate}
+ */
+public interface BaseDao<E, C extends DaoCondition>{
+	
+	/**
+	 * <p>通过主键ID更新一个实体bean</p>
+	 * @Title: updateById
+	 * @Description: 通过主键ID更新一个实体bean
+	 * @param entity 当前需要更新的实体bean
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	public abstract int updateById(E entity);
+	
+	/**
+	 * <p>保存一条记录</p>
+	 * @Title: insert
+	 * @Description: 保存一条记录
+	 * @param entity 需要保存的实体
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	public abstract int insert(E entity);
+	
+	/**
+	 * <p>查询当前表里面所有的数据</p>
+	 * @Title: selectAll
+	 * @Description: 查询当前表里面所有的数据
+	 * @return List<E> 表中的所有数据
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	public abstract List<E> selectAll();
+	
+	/**
+	 * <p>通过一个查询条件，查询出一个查询结果</p>
+	 * @Title: selectFirst
+	 * @Description: 通过一个查询条件，查询出一个查询结果
+	 * @param daoCondition 查询条件
+	 * @return E 查询结果
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	public abstract E selectFirst(C daoCondition);
+		
+	/**
+	 * <p>通过一个查询条件，查询出一个查询结果</p>
+	 * <p>如果查询出来的为多条数据，则抛出1个RuntimeException</p>
+	 * @Title: selectFirst
+	 * @Description: 通过一个查询条件，查询出一个查询结果
+	 * @param daoCondition 查询条件
+	 * @return E 查询结果
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	public abstract E selectOne(C daoCondition);
+	
+	/**
+	 * <p>通过一个查询条件，查询出一个结果集合</p>
+	 * @Title: selectList
+	 * @Description: 通过一个查询条件，查询出一个结果集合
+	 * @param daoCondition 查询条件
+	 * @return List<E> 查询结果
+	 * @author Generator2
+	 * @date ${_createDate}
+	 */
+	public abstract List<E> selectList(C daoCondition);
+	
+}

@@ -60,7 +60,8 @@ public class VolecityInstance {
 		// 初始化模板引擎
 		instance.ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
 		instance.ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-		instance.ve.loadDirective("cn.ajsgn.generator2.db.vm.func.BaseColumnsFunc");
+		instance.ve.loadDirective("cn.ajsgn.generator2.vm.func.BaseColumnsFunc");
+		instance.ve.loadDirective("cn.ajsgn.generator2.vm.func.ToStringFunc");
 		instance.ve.init();
 	    return instance;
 	}

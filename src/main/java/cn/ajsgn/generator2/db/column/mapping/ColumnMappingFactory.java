@@ -41,9 +41,11 @@ public class ColumnMappingFactory {
 	public static ColumnMapping instanceOf(String driverClassName) {
 		ColumnMapping cm = null;
 		if(StringUtils.containsIgnoreCase(driverClassName, "ORACLE")){
-			cm = new OracleColumnMapping();
-		}else if(StringUtils.containsIgnoreCase(driverClassName, "MYSQL")){
-			cm = new MysqlColumnMapping();
+			cm = OracleColumnMapping.singletonInstance();
+		} else if(StringUtils.containsIgnoreCase(driverClassName, "MYSQL")){
+			cm = MysqlColumnMapping.singletonInstance();
+		} else {
+			throw new RuntimeException("当前不支持的数据库驱动类型：".concat(driverClassName));
 		}
 		return cm;
 	}

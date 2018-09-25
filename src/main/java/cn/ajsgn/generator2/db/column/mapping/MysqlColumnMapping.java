@@ -24,6 +24,16 @@ package cn.ajsgn.generator2.db.column.mapping;
  */
 class MysqlColumnMapping extends AbstractColumnMapping {
 	
+	private static final MysqlColumnMapping ME = new MysqlColumnMapping();
+	
+	private MysqlColumnMapping() {
+		
+	}
+	
+	public static ColumnMapping singletonInstance() {
+		return ME;
+	}
+	
 	@Override
 	protected void javaTypeMappingInit(){
 		addColumnClassName("INT","java.lang.Integer");

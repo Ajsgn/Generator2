@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 public class DefaultPackageNameCreator implements PackageNameCreator {
 	
 	private static final DefaultPackageNameCreator ME = new DefaultPackageNameCreator();
-	private static final String DEFAULT_PACKAGE = "cn.ajsgn";
+	private static final String DEFAULT_PACKAGE = "cn.ajsgn.generator2";
 	
 	private DefaultPackageNameCreator() {
 		

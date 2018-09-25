@@ -24,6 +24,16 @@ package cn.ajsgn.generator2.db.column.mapping;
  */
 class OracleColumnMapping extends AbstractColumnMapping{
 	
+	private static final OracleColumnMapping ME = new OracleColumnMapping();
+	
+	private OracleColumnMapping() {
+		
+	}
+	
+	public static ColumnMapping singletonInstance() {
+		return ME;
+	}
+	
 	@Override
 	protected void javaTypeMappingInit(){
 		addColumnClassName("BFILE", "oracle.jdbc.OracleBfile");

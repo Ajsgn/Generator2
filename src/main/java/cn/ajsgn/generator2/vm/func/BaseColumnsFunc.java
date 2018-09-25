@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ajsgn.generator2.db.vm.func;
+package cn.ajsgn.generator2.vm.func;
 
 import java.io.IOException;
 import java.io.Writer;

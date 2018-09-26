@@ -1,4 +1,4 @@
-/*
+#*
  * Copyright (c) 2018, Ajsgn 杨光 (Ajsgn@foxmail.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,28 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package cn.ajsgn.generator2.core.strategy.abs;
+ *#
+package ${_daoPackage};
 
-import cn.ajsgn.generator2.vm.VolecityInstance;
+import ${_absCommonPackage}.BaseDao;
+import ${_modelPackage}.${_className};
+import ${_daoConditionPackage}.${_daoConditionClassName};
 
 /**
- * <p>生成策略抽象接口</p>
- * @ClassName: GeneratorStrategy
- * @Description: 生成策略抽象接口
- * @author Ajsgn@foxmail.com
- * @date 2018年9月26日 下午8:28:06
+ * <p>${_className}数据层的基础操作</p>
+ * @ClassName: ${_daoClassName}
+ * @Description: ${_className}数据层的基础操作
+ * @author Generator
+ * @date ${_createDate}
  */
-public interface GeneratorStrategy {
-	
-	/**
-	 * <p>回调方法，用于执行生成策略<p>
-	 * @Title: generator
-	 * @Description: 回调方法，用于执行生成策略
-	 * @param vm 模板引擎
-	 * @author Ajsgn@foxmail.com
-	 * @date 2018年9月26日 下午8:28:28
-	 */
-	public abstract void generator(VolecityInstance vm);
+public interface ${_daoClassName} extends BaseDao<${_className}, ${_daoConditionClassName}> {
 	
 }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 #*
  * Copyright (c) 2018, Ajsgn 杨光 (Ajsgn@foxmail.com).
  *
@@ -13,15 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-package ${_modelPackage};
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- ${_createDate} by Generator2 -->
+<mapper namespace="${_mapperPackage}.${_mapperClassName}">
 
-import ${_baseModelPackage}.${_baseClassName};
+  <resultMap id="BaseResultMap" type="${_modelPackage}.${_className}">
+	#foreach( $_columnInfo in $_columnInfos) 
+	<result column="${_columnInfo.columnName}" jdbcType="${_columnMapping.getDbColumnType($_columnInfo.typeName)}" property="${_columnInfo.columnCamelName}" />
+	#end
+  </resultMap>
 
-/**
- * <p>封装实体bean</p>
- * @author Generator2
- * @date ${_createDate}
- */
-public class ${_className} extends ${_baseClassName} {
-
-}
+  <sql id="Base_Column_List">
+	#baseColumns()
+  </sql>
+  
+</mapper>

@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2018, Ajsgn 杨光 (Ajsgn@foxmail.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cn.ajsgn.generator2.core.strategy.impl;
 
 import java.io.IOException;
@@ -25,7 +40,6 @@ import cn.ajsgn.generator2.db.column.mapping.ColumnMappingFactory;
 import cn.ajsgn.generator2.db.config.ColumnTypeEnum;
 import cn.ajsgn.generator2.db.names.DefaultPackageNameCreator;
 import cn.ajsgn.generator2.db.names.PackageNameCreator;
-import cn.ajsgn.generator2.util.StrKit;
 import cn.ajsgn.generator2.vm.VolecityInstance;
 
 public class DbGeneratorStrategy implements GeneratorStrategy {
@@ -41,15 +55,17 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 	
 	private String basePackage;
 	
+	private String absCommonPackage;
+	private String baseModelPackage;
 	private String modelPackage;
-	private String absModelPackage;
+	private String baseDaoConditionPackage;
+	private String daoConditionPackage;
 	private String mapperPackage;
 	private String mapperXmlPackage;
+	private String baseMapperPackage;
+	private String baseMapperXmlPackage;
 	private String daoPackage;
 	private String daoImplPackage;
-	private String daoConditionPackage;
-	private String absDaoConditionPackage;
-	private String absCommonPackage;
 	
 	private ColumnMapping columnMapping;
 	
@@ -91,15 +107,18 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 	public DbGeneratorStrategy setBasePackage(String basePackage, PackageNameCreator packageNameCreator) {
 		packageNameCreator = packageNameCreator == null ? DefaultPackageNameCreator.singletonInstance() : packageNameCreator;
 		this.basePackage = StringUtils.defaultIfBlank(basePackage, "");
+		
+		this.absCommonPackage = packageNameCreator.absCommonPackage(this.basePackage);
+		this.baseModelPackage = packageNameCreator.baseModelPackage(this.basePackage);
 		this.modelPackage = packageNameCreator.modelPackage(this.basePackage);
-		this.absModelPackage = packageNameCreator.absModelPackage(this.basePackage);
+		this.baseDaoConditionPackage = packageNameCreator.baseDaoConditionPackage(this.basePackage);
+		this.daoConditionPackage = packageNameCreator.daoConditionPackage(this.basePackage);
 		this.mapperPackage = packageNameCreator.mapperPackage(this.basePackage);
 		this.mapperXmlPackage = packageNameCreator.mapperXmlPackage(this.basePackage);
+		this.baseMapperPackage = packageNameCreator.baseMapperPackage(this.basePackage);
+		this.baseMapperXmlPackage = packageNameCreator.baseMapperXmlPackage(this.basePackage);
 		this.daoPackage = packageNameCreator.daoPackage(this.basePackage);
 		this.daoImplPackage = packageNameCreator.daoImplPackage(this.basePackage);
-		this.daoConditionPackage = packageNameCreator.daoConditionPackage(this.basePackage);
-		this.absDaoConditionPackage = packageNameCreator.absDaoConditionPackage(this.basePackage);
-		this.absCommonPackage = packageNameCreator.absCommonPackage(this.basePackage);
 		return this;
 	}
 	
@@ -108,48 +127,90 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 		return this;
 	}
 	
-	public DbGeneratorStrategy withTable(String schemaName, String tableName, String beanName){
+	public DbGeneratorStrategy withTable(String schemaName, String tableName, String className, String[] primaryKeys) {
 		try {
 			DatabaseMetaData databaseMetaData = this.dbConnection.getMetaData();
 			List<ColumnInfo> columnInfos = columnInfos(databaseMetaData, schemaName, tableName);
-			
-			
-			generatorModel(tableName, beanName, columnInfos);
-			
-			
-			
+			tableGeneratory(schemaName, tableName, className, columnInfos, primaryKeys);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return this;
 	}
 	
-	private void generatorModel(String tableName, String beanName, List<ColumnInfo> columnInfos) {
-		tableName = String.valueOf(tableName);
-		tableName = String.valueOf(beanName);
-		String abstractBeanName = "Abstract".concat(beanName);
+	private void tableGeneratory(String schemaName, String tableName, String className, List<ColumnInfo> columnInfos, String[] primaryKeys) {
+		//class name
+		className = String.valueOf(className);	//Model
+		String baseClassName = "Base".concat(className);	//BaseModel
+		String daoConditionClassName = className.concat("DaoCondition");	//DaoCondition
+		String baseDaoConditionClassName = "Base".concat(daoConditionClassName);	//BaseDaoCondition
+		String mapperClassName = className.concat("Mapper");	//ModelMapper
+		String baseMapperClassName = "Base".concat(mapperClassName);	//BaseModelMapper
+		String daoClassName = className.concat("Dao");	//Dao
+		String daoImplClassName = daoClassName.concat("Impl");	//DaoImpl
 		
-		String fileName = String.format("%s.java", String.valueOf(beanName));
-		String AbstractFileName = String.format("%s.java", String.valueOf(abstractBeanName));
+		//file name
+		String modelFileName = className.concat(".java");	//model.java
+		String baseModelFileName = baseClassName.concat(".java");	//BaseModel.java
+		String daoConditionFileName = daoConditionClassName.concat(".java");	//DaoCondition.java
+		String baseDaoConditionFileName = baseDaoConditionClassName.concat(".java");	//BaseDaoCondition.java
+		String mapperFileName = mapperClassName.concat(".java");	//ModelMapper.java
+		String baseMapperFileName = baseMapperClassName.concat(".java");	//ModelBaseMapper.java
+		String mapperXmlFileName = mapperClassName.concat(".xml");	//ModelMapper.xml
+		String baseMapperXmlFileName = baseMapperClassName.concat(".xml");	//ModelBaseMapper.xml
+		String daoFileName = daoClassName.concat(".java");	//Dao.java
+		String daoImplFileName = daoImplClassName.concat(".java");	//DaoImpl.java
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("_basePackage", this.absCommonPackage);
 		params.put("_createDate", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		params.put("_absModelPackage", this.absModelPackage);
-		params.put("_abstractBeanName", abstractBeanName);
-		params.put("_toStringBeanName", abstractBeanName);
-		params.put("columnInfos", columnInfos);
-		params.put("columnMapping", this.columnMapping);
+		params.put("_primaryKeys", primaryKeys(primaryKeys, columnInfos));
+		params.put("_schemaName", schemaName);
+		params.put("_tableName", tableName);
+		//abs
+		params.put("_absCommonPackage", this.absCommonPackage);
+		//column info & mapping
+		params.put("_columnInfos", columnInfos);
+		params.put("_columnMapping", this.columnMapping);
+		//base model
+		params.put("_baseModelPackage", this.baseModelPackage);
+		params.put("_baseClassName", baseClassName);
+		params.put("_toStringClassName", baseClassName);
+		//model 
 		params.put("_modelPackage", this.modelPackage);
-		params.put("_beanName", beanName);
+		params.put("_className", className);
+		//base daoCondition
+		params.put("_baseDaoConditionPackage", this.baseDaoConditionPackage);
+		params.put("_baseDaoConditionClassName", baseDaoConditionClassName);
+		//daoCondition
+		params.put("_daoConditionPackage", this.daoConditionPackage);
+		params.put("_daoConditionClassName", daoConditionClassName);
+		//base mapper
+		params.put("_mapperPackage", this.mapperPackage);
+		params.put("_mapperClassName", mapperClassName);
+		params.put("_baseMapperPackage", this.baseMapperPackage);
+		params.put("_baseMapperClassName", baseMapperClassName);
+		//dao & daoImpl
+		params.put("_daoPackage", this.daoPackage);
+		params.put("_daoClassName", daoClassName);
+		params.put("_daoImplPackage", this.daoImplPackage);
+		params.put("_daoImplClassName", daoImplClassName);
 		
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.absModelPackage, AbstractFileName, "cn/ajsgn/generator2/template/db/model/abs/AbstractModel.vm", params));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.modelPackage, fileName, "cn/ajsgn/generator2/template/db/model/Model.vm", params));
-		
-		
-		
-		
-		
+		//model
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.modelPackage, modelFileName, "cn/ajsgn/generator2/template/db/model/Model.vm", params));
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseModelPackage, baseModelFileName, "cn/ajsgn/generator2/template/db/model/base/BaseModel.vm", params));
+		//daocondition
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.daoConditionPackage, daoConditionFileName, "cn/ajsgn/generator2/template/db/condition/DaoCondition.vm", params));
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseDaoConditionPackage, baseDaoConditionFileName, "cn/ajsgn/generator2/template/db/condition/base/BaseDaoCondition.vm", params));
+		//mapper & baseMapper
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.mapperPackage, mapperFileName, "cn/ajsgn/generator2/template/db/mapper/Mapper.vm", params));
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseMapperPackage, baseMapperFileName, "cn/ajsgn/generator2/template/db/mapper/base/BaseMapper.vm", params));
+		//mapper.xml & baseMapper.xml
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.mapperXmlPackage, mapperXmlFileName, "cn/ajsgn/generator2/template/db/mapper/xml/Mapper.xml.vm", params));
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseMapperXmlPackage, baseMapperXmlFileName, "cn/ajsgn/generator2/template/db/mapper/xml/base/BaseMapper.xml.vm", params));
+		//dao & daoImpl
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.daoPackage, daoFileName, "cn/ajsgn/generator2/template/db/dao/Dao.vm", params));
+		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.daoImplPackage, daoImplFileName, "cn/ajsgn/generator2/template/db/dao/impl/DaoImpl.vm", params));
+	
 	}
 	
 	private void generatorAbstract() {
@@ -221,6 +282,28 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 		}
 		return list;
 	}
+	
+	/**
+	 * <p>主键描述拼接，用于Mapper</p>
+	 * @Title: primaryKeys
+	 * @Description: 主键描述拼接，用于Mapper
+	 * @author Ajsgn@foxmail.com
+	 * @date 2017年10月22日 下午7:35:52
+	 */
+	private List<ColumnInfo> primaryKeys(String[] primaryKeysArray, List<ColumnInfo> columnInfos){
+		if(null == primaryKeysArray || 0 == primaryKeysArray.length) {
+			primaryKeysArray = new String[] {"ID"};
+		}
+		List<ColumnInfo> primaryKeys = new ArrayList<ColumnInfo>();
+		for(String pk : primaryKeysArray){
+			for(ColumnInfo columnInfo : columnInfos){
+				if(StringUtils.equalsIgnoreCase(pk, columnInfo.getColumnName())){
+					primaryKeys.add(columnInfo);
+				}
+			}
+		}
+		return primaryKeys;
+	}
 
 	@Override
 	public void generator(VolecityInstance vm) {
@@ -273,7 +356,6 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 			DbGeneratorStrategy strategy = new DbGeneratorStrategy(this);
 			return strategy;
 		}
-		
 		
 	}
 

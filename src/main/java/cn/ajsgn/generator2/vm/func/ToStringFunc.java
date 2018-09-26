@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Ajsgn 杨光 (Ajsgn@foxmail.com).
+ * Copyright (c) 2018, Ajsgn 杨光 (Ajsgn@foxmail.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,10 +49,10 @@ public class ToStringFunc extends Directive{
 
 	@Override
 	public boolean render(InternalContextAdapter context, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
-		Object obj = context.get("columnInfos");
-		String toStringBeanName = String.valueOf(context.get("_toStringBeanName"));
+		Object obj = context.get("_columnInfos");
+		String toStringClassName = String.valueOf(context.get("_toStringClassName"));
 		String lineSeparator = System.getProperty("line.separator");
-		StringBuilder sb = new StringBuilder("\t\treturn \"").append(toStringBeanName).append(" [\" + ");
+		StringBuilder sb = new StringBuilder("\t\treturn \"").append(toStringClassName).append(" [\" + ");
 		sb.append(lineSeparator).append("\t\t\t");
 		if(obj instanceof List){
 			@SuppressWarnings("rawtypes")

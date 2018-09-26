@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Ajsgn 杨光 (Ajsgn@foxmail.com).
+ * Copyright (c) 2018, Ajsgn 杨光 (Ajsgn@foxmail.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class BaseColumnsFunc extends Directive{
 
 	@Override
 	public boolean render(InternalContextAdapter context, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
-		Object obj = context.get("columnInfos");
+		Object obj = context.get("_columnInfos");
 		String lineSeparator = System.getProperty("line.separator");
 		StringBuilder sb = new StringBuilder("\t");
 		if(obj instanceof List){

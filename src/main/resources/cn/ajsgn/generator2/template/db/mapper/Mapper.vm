@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-package ${_modelPackage};
+package ${_mapperPackage};
 
-import ${_baseModelPackage}.${_baseClassName};
+import org.apache.ibatis.annotations.Mapper;
 
-/**
- * <p>封装实体bean</p>
- * @author Generator2
- * @date ${_createDate}
- */
-public class ${_className} extends ${_baseClassName} {
+import ${_baseMapperPackage}.${_baseMapperClassName};
 
+@Mapper
+public interface ${_mapperClassName} extends ${_baseMapperClassName} {
+	
 }

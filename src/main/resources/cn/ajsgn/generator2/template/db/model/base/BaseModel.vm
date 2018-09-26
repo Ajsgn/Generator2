@@ -13,35 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-package ${_absModelPackage};
+package ${_baseModelPackage};
 
 /**
  * <p>封装实体bean</p>
  * @author Generator2
  * @date ${_createDate}
  */
-public abstract class ${_abstractBeanName} {
+public abstract class ${_baseClassName} {
 
-	#foreach( $columnInfo in $columnInfos) 
+	#foreach( $_columnInfo in $_columnInfos) 
 	/**
-	 * $!columnInfo.remarks
+	 * $!_columnInfo.remarks
 	 */
-	private ${columnMapping.getColumnClassName($columnInfo.typeName)} ${columnInfo.columnCamelName};
+	private ${_columnMapping.getColumnClassName($_columnInfo.typeName)} ${_columnInfo.columnCamelName};
 	#end
-	#foreach( $columnInfo in $columnInfos) 
+	#foreach( $_columnInfo in $_columnInfos) 
 	
 	/**
-	 * $!columnInfo.remarks
+	 * $!_columnInfo.remarks
 	 */
-	public ${columnMapping.getColumnClassName($columnInfo.typeName)} get${columnInfo.columnEntityName}(){
-		return $columnInfo.columnCamelName;
+	public ${_columnMapping.getColumnClassName($_columnInfo.typeName)} get${_columnInfo.columnEntityName}(){
+		return $_columnInfo.columnCamelName;
 	}
 	
 	/**
-	 * $!columnInfo.remarks
+	 * $!_columnInfo.remarks
 	 */
-	public void set${columnInfo.columnEntityName}(${columnMapping.getColumnClassName($columnInfo.typeName)} ${columnInfo.columnCamelName}){
-		this.${columnInfo.columnCamelName} = ${columnInfo.columnCamelName};
+	public void set${_columnInfo.columnEntityName}(${_columnMapping.getColumnClassName($_columnInfo.typeName)} ${_columnInfo.columnCamelName}){
+		this.${_columnInfo.columnCamelName} = ${_columnInfo.columnCamelName};
 	}
 	#end
 	

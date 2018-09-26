@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Ajsgn 杨光 (Ajsgn@foxmail.com).
+ * Copyright (c) 2018, Ajsgn 杨光 (Ajsgn@foxmail.com).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,14 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * <p>文件资源路径准备，层级目录生成<p>
+	 * @Title: fileReady
+	 * @Description: 文件资源路径准备，层级目录生成
+	 * @param file 需要操作的文件对象
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月26日 下午8:25:43
+	 */
 	public static void fileReady(File file) {
 		if(null != file) {
 			if(true == file.exists()) {
@@ -64,6 +72,15 @@ public class FileUtil {
 		}
 	}
 	
+	/**
+	 * <p>文件目录路径兼容<p>
+	 * @Title: filePathCompatible
+	 * @Description: 文件目录路径兼容
+	 * @param 路径地址
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月26日 下午8:24:58
+	 * @return String 兼容后的路径地址
+	 */
 	public static String filePathCompatible(String filePath) {
 		if(true == StringUtils.isNotBlank(filePath)) {
 			//创建文件，兼容文件的目录分隔符
@@ -76,6 +93,15 @@ public class FileUtil {
 		return filePath;
 	}
 	
+	/**
+	 * <p>保证路径是以目录分隔符结尾<p>
+	 * @Title: pathEndWithFileSeparator
+	 * @Description: 保证路径是以目录分隔符结尾
+	 * @param filePath
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月26日 下午8:26:48
+	 * @return String 文件路径
+	 */
 	public static String pathEndWithFileSeparator(String filePath) {
 		filePath = StringUtils.isNotBlank(filePath) && StringUtils.endsWith(filePath, File.separator) ? filePath : filePath.concat(File.separator);
 		return filePath;

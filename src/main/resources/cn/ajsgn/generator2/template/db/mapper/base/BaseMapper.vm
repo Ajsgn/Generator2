@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-package ${_modelPackage};
+package ${_baseMapperPackage};
 
-import ${_baseModelPackage}.${_baseClassName};
+import ${_absCommonPackage}.BaseMapper;
+import ${_modelPackage}.${_className};
+import ${_daoConditionPackage}.${_daoConditionClassName};
 
-/**
- * <p>封装实体bean</p>
- * @author Generator2
- * @date ${_createDate}
- */
-public class ${_className} extends ${_baseClassName} {
-
+public interface ${_baseMapperClassName} extends BaseMapper<${_className}, ${_daoConditionClassName}>  {
+	
 }

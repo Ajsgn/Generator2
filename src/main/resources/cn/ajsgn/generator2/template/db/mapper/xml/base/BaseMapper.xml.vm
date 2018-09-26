@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+#*
+ * Copyright (c) 2018, Ajsgn 杨光 (Ajsgn@foxmail.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *#
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- ${_createDate} by Generator2 -->
+<mapper namespace="${_baseMapperPackage}.${_baseMapperClassName}">
+
+  <resultMap id="BaseResultMap" type="${_modelPackage}.${_className}">
+	#foreach( $_columnInfo in $_columnInfos) 
+	<result column="${_columnInfo.columnName}" jdbcType="${_columnMapping.getDbColumnType($_columnInfo.typeName)}" property="${_columnInfo.columnCamelName}" />
+	#end
+  </resultMap>
+
+  <sql id="Base_Column_List">
+	#baseColumns()
+  </sql>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from ${_schemaName}.${_tableName}
+  </select>
+  
+  <select id="selectByCondition" parameterType="${_modelPackage}.${_className}" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+  	from ${_schemaName}.${_tableName}
+	<where>
+	  #foreach( $_columnInfo in $_columnInfos) 
+      <if test="${_columnInfo.columnCamelName} != null">
+        AND ${_columnInfo.columnName} = #{${_columnInfo.columnCamelName},jdbcType=${_columnMapping.getDbColumnType($_columnInfo.typeName)}}
+      </if>
+      #end
+	</where>
+  </select>
+  
+  <insert id="insert" parameterType="${_modelPackage}.${_className}">
+    insert into ${_schemaName}.${_tableName}
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+  	  #foreach( $_columnInfo in $_columnInfos) 
+      <if test="${_columnInfo.columnCamelName} != null">
+        ${_columnInfo.columnName}, 
+      </if>
+      #end
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #foreach( $_columnInfo in $_columnInfos) 
+      <if test="${_columnInfo.columnCamelName} != null">
+        #{${_columnInfo.columnCamelName},jdbcType=${_columnMapping.getDbColumnType($_columnInfo.typeName)}},
+      </if>
+      #end
+    </trim>
+  </insert>
+  
+  <update id="updateById" parameterType="${_modelPackage}.${_className}">
+    update ${_schemaName}.${_tableName}
+    <set>
+  	  #foreach( $_columnInfo in $_columnInfos) 
+      <if test="${_columnInfo.columnCamelName} != null">
+        ${_columnInfo.columnName} = #{${_columnInfo.columnCamelName},jdbcType=${_columnMapping.getDbColumnType($_columnInfo.typeName)}},
+      </if>
+      #end
+    </set>
+	<where>
+	  #if(!$_primaryKeys)
+	  AND ID = #{ID,jdbcType=VARCHAR}
+	  #end
+	  #if($_primaryKeys)
+	  #foreach( $pk in $_primaryKeys)
+      AND ${pk.columnName} = #{${pk.columnCamelName},jdbcType=${_columnMapping.getDbColumnType($pk.typeName)}}
+	  #end
+	  #end
+	</where>
+  </update>
+
+</mapper>

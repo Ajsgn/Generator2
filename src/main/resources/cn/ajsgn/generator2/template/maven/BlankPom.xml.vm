@@ -14,8 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- ${_createDate} by Generator2 -->
-<mapper namespace="${_mapperPackage}.${_mapperClassName}">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-</mapper>
+  <groupId>${_groupId}</groupId>
+  <artifactId>${_artifactId}</artifactId>
+  <version>${_version}</version>
+  <packaging>${_packaging}</packaging>
+
+  <name>${_name}</name>
+  <url>${_url}</url>
+
+  <properties>
+    <project.build.sourceEncoding>${_encode}</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+  	
+  </dependencies>
+</project>

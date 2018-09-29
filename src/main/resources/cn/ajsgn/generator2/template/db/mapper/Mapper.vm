@@ -17,9 +17,11 @@ package ${_mapperPackage};
 
 import org.apache.ibatis.annotations.Mapper;
 
-import ${_baseMapperPackage}.${_baseMapperClassName};
+import ${_absCommonPackage}.BaseMapper;
+import ${_modelPackage}.${_className};
+import ${_daoConditionPackage}.${_daoConditionClassName};
 
 @Mapper
-public interface ${_mapperClassName} extends ${_baseMapperClassName} {
+public interface ${_mapperClassName} extends BaseMapper<${_className}, ${_daoConditionClassName}> {
 	
 }

@@ -16,7 +16,7 @@
  *#
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- ${_createDate} by Generator2 -->
-<mapper namespace="${_baseMapperPackage}.${_baseMapperClassName}">
+<mapper namespace="${_mapperPackage}.${_mapperClassName}">
 
   <resultMap id="BaseResultMap" type="${_modelPackage}.${_className}">
 	#foreach( $_columnInfo in $_columnInfos) 

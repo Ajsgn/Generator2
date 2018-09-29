@@ -61,11 +61,6 @@ public class DefaultPackageNameCreator implements PackageNameCreator {
 	}
 
 	@Override
-	public String baseMapperPackage(String basePackage) {
-		return StringUtils.defaultIfBlank(basePackage, DEFAULT_PACKAGE).concat(".mapper.base");
-	}
-
-	@Override
 	public String mapperXmlPackage(String basePackage) {
 		return StringUtils.defaultIfBlank(basePackage, DEFAULT_PACKAGE).concat(".mapper.xml");
 	}

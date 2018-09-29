@@ -31,8 +31,6 @@ public interface PackageNameCreator {
 	
 	public abstract String mapperXmlPackage(String basePackage);
 
-	public abstract String baseMapperPackage(String basePackage);
-
 	public abstract String baseMapperXmlPackage(String basePackage);
 	
 	public abstract String daoPackage(String basePackage);

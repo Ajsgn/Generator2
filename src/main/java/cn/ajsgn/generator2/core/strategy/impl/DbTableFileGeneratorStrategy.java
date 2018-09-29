@@ -31,9 +31,10 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
-import cn.ajsgn.generator2.core.generator.abs.FileTemplateGenerator;
-import cn.ajsgn.generator2.core.generator.impl.PackageFileTemplateGenerator;
+import cn.ajsgn.generator2.constant.Constant;
 import cn.ajsgn.generator2.core.strategy.abs.GeneratorStrategy;
+import cn.ajsgn.generator2.core.template.abs.FileTemplate;
+import cn.ajsgn.generator2.core.template.impl.PackageFileTemplate;
 import cn.ajsgn.generator2.db.column.ColumnInfo;
 import cn.ajsgn.generator2.db.column.mapping.ColumnMapping;
 import cn.ajsgn.generator2.db.column.mapping.ColumnMappingFactory;
@@ -42,7 +43,7 @@ import cn.ajsgn.generator2.db.names.DefaultPackageNameCreator;
 import cn.ajsgn.generator2.db.names.PackageNameCreator;
 import cn.ajsgn.generator2.vm.VolecityInstance;
 
-public class DbGeneratorStrategy implements GeneratorStrategy {
+public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 	
 	private String user;
 	private String password;
@@ -69,9 +70,9 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 	
 	private ColumnMapping columnMapping;
 	
-	private List<FileTemplateGenerator> files = new ArrayList<FileTemplateGenerator>();
+	private List<FileTemplate> files = new ArrayList<FileTemplate>();
 	
-	private DbGeneratorStrategy(Builder builder) {
+	private DbTableFileGeneratorStrategy(Builder builder) {
 		this.user = builder.user;
 		this.password = builder.password;
 		this.jdbcUrl = builder.jdbcUrl;
@@ -81,7 +82,7 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 		//实例化连接
 		init();
 		//实例化包级目录
-		setBasePackage("cn.ajsgn.generator2", DefaultPackageNameCreator.singletonInstance());
+		setBasePackage(builder.basePackage, builder.packageNameCreator);
 		//数据库示例的列类型映射
 		this.columnMapping = ColumnMappingFactory.instanceOf(driverClass);
 	}
@@ -104,7 +105,7 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 		}
 	}
 	
-	public DbGeneratorStrategy setBasePackage(String basePackage, PackageNameCreator packageNameCreator) {
+	private DbTableFileGeneratorStrategy setBasePackage(String basePackage, PackageNameCreator packageNameCreator) {
 		packageNameCreator = packageNameCreator == null ? DefaultPackageNameCreator.singletonInstance() : packageNameCreator;
 		this.basePackage = StringUtils.defaultIfBlank(basePackage, "");
 		
@@ -115,19 +116,18 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 		this.daoConditionPackage = packageNameCreator.daoConditionPackage(this.basePackage);
 		this.mapperPackage = packageNameCreator.mapperPackage(this.basePackage);
 		this.mapperXmlPackage = packageNameCreator.mapperXmlPackage(this.basePackage);
-		this.baseMapperPackage = packageNameCreator.baseMapperPackage(this.basePackage);
 		this.baseMapperXmlPackage = packageNameCreator.baseMapperXmlPackage(this.basePackage);
 		this.daoPackage = packageNameCreator.daoPackage(this.basePackage);
 		this.daoImplPackage = packageNameCreator.daoImplPackage(this.basePackage);
 		return this;
 	}
 	
-	public DbGeneratorStrategy withAbstract() {
+	public DbTableFileGeneratorStrategy withAbstract() {
 		generatorAbstract();
 		return this;
 	}
 	
-	public DbGeneratorStrategy withTable(String schemaName, String tableName, String className, String[] primaryKeys) {
+	public DbTableFileGeneratorStrategy withTable(String schemaName, String tableName, String className, String[] primaryKeys) {
 		try {
 			DatabaseMetaData databaseMetaData = this.dbConnection.getMetaData();
 			List<ColumnInfo> columnInfos = columnInfos(databaseMetaData, schemaName, tableName);
@@ -141,25 +141,24 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 	private void tableGeneratory(String schemaName, String tableName, String className, List<ColumnInfo> columnInfos, String[] primaryKeys) {
 		//class name
 		className = String.valueOf(className);	//Model
-		String baseClassName = "Base".concat(className);	//BaseModel
-		String daoConditionClassName = className.concat("DaoCondition");	//DaoCondition
-		String baseDaoConditionClassName = "Base".concat(daoConditionClassName);	//BaseDaoCondition
-		String mapperClassName = className.concat("Mapper");	//ModelMapper
-		String baseMapperClassName = "Base".concat(mapperClassName);	//BaseModelMapper
-		String daoClassName = className.concat("Dao");	//Dao
-		String daoImplClassName = daoClassName.concat("Impl");	//DaoImpl
+		String baseClassName = Constant.BASE_FILE_PREFIX.concat(className);	//BaseModel
+		String daoConditionClassName = className.concat(Constant.DAO_CONDITION_SUFFIX);	//DaoCondition
+		String baseDaoConditionClassName = Constant.BASE_FILE_PREFIX.concat(daoConditionClassName);	//BaseDaoCondition
+		String mapperClassName = className.concat(Constant.MAPPER_SUFFIX);	//ModelMapper
+		String baseMapperClassName = Constant.BASE_FILE_PREFIX.concat(mapperClassName);	//BaseModelMapper
+		String daoClassName = className.concat(Constant.DAO_SUFFIX);	//Dao
+		String daoImplClassName = daoClassName.concat(Constant.IMPLEMENT_SUFFIX);	//DaoImpl
 		
 		//file name
-		String modelFileName = className.concat(".java");	//model.java
-		String baseModelFileName = baseClassName.concat(".java");	//BaseModel.java
-		String daoConditionFileName = daoConditionClassName.concat(".java");	//DaoCondition.java
-		String baseDaoConditionFileName = baseDaoConditionClassName.concat(".java");	//BaseDaoCondition.java
-		String mapperFileName = mapperClassName.concat(".java");	//ModelMapper.java
-		String baseMapperFileName = baseMapperClassName.concat(".java");	//ModelBaseMapper.java
-		String mapperXmlFileName = mapperClassName.concat(".xml");	//ModelMapper.xml
-		String baseMapperXmlFileName = baseMapperClassName.concat(".xml");	//ModelBaseMapper.xml
-		String daoFileName = daoClassName.concat(".java");	//Dao.java
-		String daoImplFileName = daoImplClassName.concat(".java");	//DaoImpl.java
+		String modelFileName = className.concat(Constant.JAVA_FILE_SUFFIX);	//model.java
+		String baseModelFileName = baseClassName.concat(Constant.JAVA_FILE_SUFFIX);	//BaseModel.java
+		String daoConditionFileName = daoConditionClassName.concat(Constant.JAVA_FILE_SUFFIX);	//DaoCondition.java
+		String baseDaoConditionFileName = baseDaoConditionClassName.concat(Constant.JAVA_FILE_SUFFIX);	//BaseDaoCondition.java
+		String mapperFileName = mapperClassName.concat(Constant.JAVA_FILE_SUFFIX);	//ModelMapper.java
+		String mapperXmlFileName = mapperClassName.concat(Constant.XML_FILE_SUFFIX);	//ModelMapper.xml
+		String baseMapperXmlFileName = baseMapperClassName.concat(Constant.XML_FILE_SUFFIX);	//ModelBaseMapper.xml
+		String daoFileName = daoClassName.concat(Constant.JAVA_FILE_SUFFIX);	//Dao.java
+		String daoImplFileName = daoImplClassName.concat(Constant.JAVA_FILE_SUFFIX);	//DaoImpl.java
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_createDate", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -196,20 +195,20 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 		params.put("_daoImplClassName", daoImplClassName);
 		
 		//model
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.modelPackage, modelFileName, "cn/ajsgn/generator2/template/db/model/Model.vm", params));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseModelPackage, baseModelFileName, "cn/ajsgn/generator2/template/db/model/base/BaseModel.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.modelPackage, modelFileName, "cn/ajsgn/generator2/template/db/model/Model.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.baseModelPackage, baseModelFileName, "cn/ajsgn/generator2/template/db/model/base/BaseModel.vm", params));
 		//daocondition
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.daoConditionPackage, daoConditionFileName, "cn/ajsgn/generator2/template/db/condition/DaoCondition.vm", params));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseDaoConditionPackage, baseDaoConditionFileName, "cn/ajsgn/generator2/template/db/condition/base/BaseDaoCondition.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.daoConditionPackage, daoConditionFileName, "cn/ajsgn/generator2/template/db/condition/DaoCondition.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.baseDaoConditionPackage, baseDaoConditionFileName, "cn/ajsgn/generator2/template/db/condition/base/BaseDaoCondition.vm", params));
 		//mapper & baseMapper
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.mapperPackage, mapperFileName, "cn/ajsgn/generator2/template/db/mapper/Mapper.vm", params));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseMapperPackage, baseMapperFileName, "cn/ajsgn/generator2/template/db/mapper/base/BaseMapper.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.mapperPackage, mapperFileName, "cn/ajsgn/generator2/template/db/mapper/Mapper.vm", params));
+//		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseMapperPackage, baseMapperFileName, "cn/ajsgn/generator2/template/db/mapper/base/BaseMapper.vm", params));
 		//mapper.xml & baseMapper.xml
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.mapperXmlPackage, mapperXmlFileName, "cn/ajsgn/generator2/template/db/mapper/xml/Mapper.xml.vm", params));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.baseMapperXmlPackage, baseMapperXmlFileName, "cn/ajsgn/generator2/template/db/mapper/xml/base/BaseMapper.xml.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.mapperXmlPackage, mapperXmlFileName, "cn/ajsgn/generator2/template/db/mapper/xml/Mapper.xml.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.baseMapperXmlPackage, baseMapperXmlFileName, "cn/ajsgn/generator2/template/db/mapper/xml/base/BaseMapper.xml.vm", params));
 		//dao & daoImpl
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.daoPackage, daoFileName, "cn/ajsgn/generator2/template/db/dao/Dao.vm", params));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.daoImplPackage, daoImplFileName, "cn/ajsgn/generator2/template/db/dao/impl/DaoImpl.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.daoPackage, daoFileName, "cn/ajsgn/generator2/template/db/dao/Dao.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.daoImplPackage, daoImplFileName, "cn/ajsgn/generator2/template/db/dao/impl/DaoImpl.vm", params));
 	
 	}
 	
@@ -224,28 +223,28 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_basePackage", this.absCommonPackage);
 		params.put("_createDate", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.absCommonPackage, "AbstractDaoImpl.java", "cn/ajsgn/generator2/template/db/abs/AbstractDaoImpl.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.absCommonPackage, "AbstractDaoImpl.java", "cn/ajsgn/generator2/template/db/abs/AbstractDaoImpl.vm", params));
 	}
 	
 	private void generatorBaseDao() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_basePackage", this.absCommonPackage);
 		params.put("_createDate", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.absCommonPackage, "BaseDao.java", "cn/ajsgn/generator2/template/db/abs/BaseDao.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.absCommonPackage, "BaseDao.java", "cn/ajsgn/generator2/template/db/abs/BaseDao.vm", params));
 	}
 	
 	private void generatorBaseMapper() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_basePackage", this.absCommonPackage);
 		params.put("_createDate", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.absCommonPackage, "BaseMapper.java", "cn/ajsgn/generator2/template/db/abs/BaseMapper.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.absCommonPackage, "BaseMapper.java", "cn/ajsgn/generator2/template/db/abs/BaseMapper.vm", params));
 	}
 	
 	private void generatorDaoCondition() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_basePackage", this.absCommonPackage);
 		params.put("_createDate", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		files.add(new PackageFileTemplateGenerator(this.baseOutFolderPath, this.absCommonPackage, "DaoCondition.java", "cn/ajsgn/generator2/template/db/abs/DaoCondition.vm", params));
+		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.absCommonPackage, "DaoCondition.java", "cn/ajsgn/generator2/template/db/abs/DaoCondition.vm", params));
 	}
 	
 	private List<ColumnInfo> columnInfos(DatabaseMetaData databaseMetaData, String schemaName, String tableName) throws SQLException{
@@ -334,7 +333,9 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 		private String jdbcUrl;
 		private String driverClass;
 		
-		private String baseOutFolderPath = "d:/Generator2";
+		private String baseOutFolderPath = Constant.DEFAULT_OUTPUT_BASE_FOLDER;
+		private String basePackage = Constant.DEFAULT_BASE_PACKAGE;
+		private PackageNameCreator packageNameCreator = DefaultPackageNameCreator.singletonInstance();
 		
 		public Builder(String user, String password, String jdbcUrl, String driverClass) {
 			if(true == StringUtils.isAnyBlank(user, password, jdbcUrl, driverClass))
@@ -352,8 +353,14 @@ public class DbGeneratorStrategy implements GeneratorStrategy {
 			return this;
 		}
 		
-		public DbGeneratorStrategy build() {
-			DbGeneratorStrategy strategy = new DbGeneratorStrategy(this);
+		public Builder basePackage(String basePackage, PackageNameCreator packageNameCreator) {
+			this.basePackage = basePackage;
+			this.packageNameCreator = packageNameCreator;
+			return this;
+		}
+		
+		public DbTableFileGeneratorStrategy build() {
+			DbTableFileGeneratorStrategy strategy = new DbTableFileGeneratorStrategy(this);
 			return strategy;
 		}
 		

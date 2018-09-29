@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ajsgn.generator2.core.generator.abs;
+package cn.ajsgn.generator2.core.template.abs;
 
 import java.io.FileWriter;
 
 /**
  * <p>文件生成器</p>
- * @ClassName: FileTemplateGenerator
+ * @ClassName: FileTemplate
  * @Description: 文件生成器
  * @author Ajsgn@foxmail.com
  * @date 2018年9月26日 下午8:19:11
  */
-public interface FileTemplateGenerator extends TemplateGenerator {
+public interface FileTemplate extends Template {
 	
 	/**
 	 * <p>目标文件输出流<p>

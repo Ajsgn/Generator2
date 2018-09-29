@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ajsgn.generator2.core.generator.abs;
+package cn.ajsgn.generator2.core.template.abs;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,12 +23,12 @@ import cn.ajsgn.generator2.util.FileUtil;
 
 /**
  * <p>文件输出</p>
- * @ClassName: AbstractFileTemplateGenerator
+ * @ClassName: AbstractFileTemplate
  * @Description: 文件输出
  * @author Ajsgn@foxmail.com
  * @date 2018年9月26日 下午8:16:57
  */
-public abstract class AbstractFileTemplateGenerator implements FileTemplateGenerator {
+public abstract class AbstractFileTemplate implements FileTemplate {
 	
 	/**
 	 * <p>需要写出的文件<p>

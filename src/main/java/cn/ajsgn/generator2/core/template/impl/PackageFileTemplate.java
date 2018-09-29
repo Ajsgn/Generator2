@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ajsgn.generator2.core.generator.impl;
+package cn.ajsgn.generator2.core.template.impl;
 
 import java.io.File;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import cn.ajsgn.generator2.core.generator.abs.AbstractFileTemplateGenerator;
+import cn.ajsgn.generator2.core.template.abs.AbstractFileTemplate;
 import cn.ajsgn.generator2.util.FileUtil;
 
 /**
@@ -31,7 +31,7 @@ import cn.ajsgn.generator2.util.FileUtil;
  * @author Ajsgn@foxmail.com
  * @date 2018年9月26日 下午8:23:12
  */
-public class PackageFileTemplateGenerator extends AbstractFileTemplateGenerator {
+public class PackageFileTemplate extends AbstractFileTemplate {
 	
 	//文件基本输出路径
 	private String baseOutFolderPath;
@@ -42,7 +42,7 @@ public class PackageFileTemplateGenerator extends AbstractFileTemplateGenerator 
 	//输出文件
 	private File outFile;
 	
-	public PackageFileTemplateGenerator(String baseOutFolderPath, String packageName, String fileName, String templateResourcePath, Map<String, Object> params) {
+	public PackageFileTemplate(String baseOutFolderPath, String packageName, String fileName, String templateResourcePath, Map<String, Object> params) {
 		if(true == StringUtils.isBlank(templateResourcePath))
 			throw new IllegalArgumentException("模板资源文件不能为空...");
 		this.templateResourcePath = templateResourcePath;
@@ -63,7 +63,6 @@ public class PackageFileTemplateGenerator extends AbstractFileTemplateGenerator 
 				.append(fileName);
 		
 		outFile = new File(String.valueOf(sb));
-		System.out.println(String.format("【准备文件】 : %s", outFile.getAbsolutePath()));
 	}
 
 	@Override
@@ -78,6 +77,7 @@ public class PackageFileTemplateGenerator extends AbstractFileTemplateGenerator 
 
 	@Override
 	protected File targetFile() {
+		System.out.println(String.format("【准备文件】 : %s", outFile.getAbsolutePath()));
 		return outFile;
 	}
 

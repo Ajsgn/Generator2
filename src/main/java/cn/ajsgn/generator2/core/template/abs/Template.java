@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.ajsgn.generator2.core.generator.abs;
+package cn.ajsgn.generator2.core.template.abs;
 
 import java.util.Map;
 
 /**
  * <p>模板生成器接口</p>
- * @ClassName: TemplateGenerator
+ * @ClassName: Template
  * @Description: 模板生成器接口
  * @author Ajsgn@foxmail.com
  * @date 2018年9月26日 下午8:20:05
  */
-public interface TemplateGenerator {
+public interface Template {
 	
 	/**
 	 * <p>模板中需要用到的参数集合<p>

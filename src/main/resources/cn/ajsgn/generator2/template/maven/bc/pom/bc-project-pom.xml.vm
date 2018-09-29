@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.bc.demo</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.1.RELEASE</version>
+    </parent>
+    
+    <!-- 只是声明依赖 org.springframework.cloud 库管理，并不直接引入 -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Dalston.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+    
+    <modules>
+        <module>bc-demo-util</module>
+        <module>bc-demo-model</module>
+        <module>bc-demo-dao</module>
+        <module>bc-demo-service</module>
+        <module>bc-demo-web</module>
+    </modules>
+    <!-- properties  -->
+    <properties>
+		<ignite.version>1.5.0.final</ignite.version>
+		<!-- <ignite.version>1.6.0</ignite.version> -->
+	</properties>
+    <!--申明依赖关系-->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        
+        <dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.0.26</version>
+		</dependency>
+		
+		<dependency>
+	    	<groupId>com.alibaba</groupId>
+	    	<artifactId>fastjson</artifactId>
+	    	<version>1.2.39</version>
+	    </dependency>
+		
+		<!-- 支持 @ConfigurationProperties 注解的类获取配置文件的自定义属性值 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- 分页插件 -->
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper</artifactId>
+			<version>4.1.5</version>
+		</dependency> 
+		
+		 <!-- actuator  监控 -->
+         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+		
+		 <!-- logstash -->
+        <dependency>  
+        <groupId>net.logstash.logback</groupId>  
+        <artifactId>logstash-logback-encoder</artifactId>  
+        <version>4.9</version>  
+        </dependency>
+        
+		<!-- base64 -->
+		<dependency>  
+	        <groupId>it.sauronsoftware.base64</groupId>  
+	        <artifactId>base64</artifactId>  
+	        <version>1.3.1</version>  
+        </dependency>
+        <dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcprov-jdk15on</artifactId>
+		    <version>1.47</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>2.0.2-beta</version>
+            <scope>test</scope>
+        </dependency>
+		
+		
+    </dependencies>
+
+    <!--设置maven仓库-->
+    
+    <!-- 私服仓库 -->
+	<repositories>
+		<repository>
+			<id>localmvn</id>
+			<name>local Repository</name>
+			<layout>default</layout>
+			<url>http://192.168.0.223:8081/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>thirdparty</id>
+			<url>http://192.168.0.223:8081/nexus/content/repositories/thirdparty/</url>
+		</repository>
+		<repository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+        
+	</repositories>
+	<!-- end 私服仓库 -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+		 <build>  
+		    <plugins>  
+		        <plugin>  
+		            <groupId>org.apache.maven.plugins</groupId>  
+		            <artifactId>maven-compiler-plugin</artifactId>  
+		            <configuration>  
+		                <source>1.8</source>  
+		                <target>1.8</target>  
+		            </configuration>  
+		        </plugin>  
+		    </plugins>  
+		</build> 
+
+</project>

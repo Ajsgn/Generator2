@@ -61,7 +61,7 @@ public class ToStringFunc extends Directive{
 				Object value = list.get(i);
 				if(value instanceof ColumnInfo){
 					ColumnInfo columnInfo = (ColumnInfo) value;
-					sb.append("\"").append(columnInfo.getColumnCamelName()).append("=\" + ")
+					sb.append(0 != i ? "\", " : "\"").append(columnInfo.getColumnCamelName()).append("=\" + ")
 						.append(columnInfo.getColumnCamelName()).append(" + ");
 					//每4个字段换行
 					if(0 == (i+1) %4) {

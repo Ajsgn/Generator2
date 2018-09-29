@@ -17,26 +17,24 @@ package cn.ajsgn.generator2;
 
 import org.junit.Test;
 
-import cn.ajsgn.generator2.core.strategy.impl.DbGeneratorStrategy;
+import cn.ajsgn.generator2.core.strategy.impl.DbTableFileGeneratorStrategy;
 import cn.ajsgn.generator2.db.names.DefaultPackageNameCreator;
-
-public class Generator2Test {
+public class DbGenerator2Test {
 
 	@Test
 	public void test() { 
 		
-		DbGeneratorStrategy.Builder builder = new DbGeneratorStrategy.Builder("bcpay", "bcpay", "jdbc:oracle:thin:@192.168.0.161:1521:orcl", "oracle.jdbc.driver.OracleDriver");
-		builder.baseOutFolderPath("d:/generator2");
+		DbTableFileGeneratorStrategy mysql = new DbTableFileGeneratorStrategy.Builder("root", "123456", "jdbc:mysql://localhost:3306/bc_eleme_platform", "com.mysql.jdbc.Driver")
+				.baseOutFolderPath("d:/generator2/mysql/xxx")	//
+				.basePackage("cn.ajsgn.generator2", DefaultPackageNameCreator.singletonInstance())	//
+				.build()	//
+				.withAbstract()	//
+				.withTable("test", "table1", "Table1", new String[] {"ID"})	//
+//				.withTable("test", "table2", "Table2", new String[] {"ID"})	//
+//				.withTable("test", "table3", "Table3", new String[] {"ID"})	//
+				;
 		
-		DbGeneratorStrategy strategy = builder.build();
-		
-		strategy.setBasePackage("cn.ajsgn.generator2.test", DefaultPackageNameCreator.singletonInstance())
-			.withAbstract()
-			.withTable("bcpay", "ZYPAYMENT", "ZyPayment", new String[] {"ORDER_NO"})
-			.withTable("bcpay", "CITICPAYMENT", "Citicpayment", new String[] {"BATCHNO", "SERIALNO"});
-		
-		
-		Generator2.generator(strategy);
+		Generator2.generator(mysql);
 		
 		
 		

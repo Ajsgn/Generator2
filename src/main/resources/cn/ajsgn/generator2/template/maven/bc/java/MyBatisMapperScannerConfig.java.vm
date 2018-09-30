@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-package ${_mapperPackage};
+package ${_configPackage};
 
 import org.apache.ibatis.annotations.Mapper;
-
-import ${_absCommonPackage}.BaseMapper;
-import ${_modelPackage}.${_className};
-import ${_daoConditionPackage}.${_daoConditionClassName};
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * <p>${_className}数据层的基础操作</p>
- * @ClassName: ${_mapperClassName}
- * @Description: ${_className}数据层的基础操作
+ * <p>mybatis 扫描配置</p>
  * @author Generator2
  * @date ${_createDate}
  */
-@Mapper
-public interface ${_mapperClassName} extends BaseMapper<${_className}, ${_daoConditionClassName}> {
-	
+@Configuration
+@MapperScan(value = "${_basePackage}", annotationClass = Mapper.class)
+@AutoConfigureAfter(MyBatisConfig.class)
+public class MyBatisMapperScannerConfig {
 }

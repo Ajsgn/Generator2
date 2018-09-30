@@ -17,15 +17,33 @@ package cn.ajsgn.generator2.db.names;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * <p>默认的包结构名称创建</p>
+ * @ClassName: DefaultPackageNameCreator
+ * @Description: 默认的包结构名称创建
+ * @author Ajsgn@foxmail.com
+ * @date 2018年9月30日 下午5:35:18
+ */
 public class DefaultPackageNameCreator implements PackageNameCreator {
 	
+	//自身单例对象
 	private static final DefaultPackageNameCreator ME = new DefaultPackageNameCreator();
+	//缺省包名称
 	private static final String DEFAULT_PACKAGE = "cn.ajsgn.generator2";
 	
+	//私有化构造器
 	private DefaultPackageNameCreator() {
 		
 	}
 	
+	/**
+	 * <p>获取当前类的单例对象<p>
+	 * @Title: singletonInstance
+	 * @Description: 获取当前类的单例对象
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月30日 下午5:36:23
+	 * @return DefaultPackageNameCreator 当前类的单例对象
+	 */
 	public static DefaultPackageNameCreator singletonInstance() {
 		return ME;
 	}

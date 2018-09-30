@@ -42,16 +42,30 @@ public class CommonFileTemplate extends AbstractFileTemplate {
 	//标识当前是否为文件夹
 	private boolean isDirectory = false;
 	
+	//私有化构造
 	private CommonFileTemplate(String templateResourcePath, Map<String, Object> params, File outFile) {
 		this.templateResourcePath = templateResourcePath;
 		this.params = params;
 		this.outFile = outFile;
 	}
 	
+	//私有化构造
 	private CommonFileTemplate(File outFile) {
 		this.outFile = outFile;
 	}
 	
+	/**
+	 * <p>文件模板创建<p>
+	 * @Title: fileTemplate
+	 * @Description: 文件模板创建
+	 * @param baseOutFolderPath 输出文件目录
+	 * @param templateResourcePath 模板文件资源路径
+	 * @param params 模板文件中所需参数
+	 * @param fileName 文件名称
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月30日 下午5:22:10
+	 * @return CommonFileTemplate 通用文件模板对象
+	 */
 	public static final CommonFileTemplate fileTemplate(String baseOutFolderPath, String templateResourcePath, Map<String, Object> params, String fileName) {
 		if(true == StringUtils.isBlank(baseOutFolderPath) || true == StringUtils.isBlank(fileName))
 			throw new IllegalArgumentException("输出文件路径与文件名称不能为空...");
@@ -68,6 +82,15 @@ public class CommonFileTemplate extends AbstractFileTemplate {
 		return fileTemplate;
 	}
 	
+	/**
+	 * <p>文件夹模板创建<p>
+	 * @Title: folderTemplate
+	 * @Description: 文件夹模板创建
+	 * @param folderPath 文件夹路径
+	 * @author g.yang@i-vpoints.com
+	 * @date 2018年9月30日 下午5:23:26
+	 * @return CommonFileTemplate 通用文件模板对象
+	 */
 	public static final CommonFileTemplate folderTemplate(String folderPath) {
 		if(StringUtils.isBlank(folderPath)) {
 			throw new IllegalArgumentException("folder path 不能为空");

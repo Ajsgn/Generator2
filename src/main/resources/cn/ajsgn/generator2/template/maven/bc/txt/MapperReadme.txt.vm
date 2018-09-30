@@ -13,22 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-package ${_mapperPackage};
-
-import org.apache.ibatis.annotations.Mapper;
-
-import ${_absCommonPackage}.BaseMapper;
-import ${_modelPackage}.${_className};
-import ${_daoConditionPackage}.${_daoConditionClassName};
-
-/**
- * <p>${_className}数据层的基础操作</p>
- * @ClassName: ${_mapperClassName}
- * @Description: ${_className}数据层的基础操作
- * @author Generator2
- * @date ${_createDate}
- */
-@Mapper
-public interface ${_mapperClassName} extends BaseMapper<${_className}, ${_daoConditionClassName}> {
-	
-}
+<!-- ${_createDate} by Generator2 -->
+默认扫描mybatis mapper.xml文件夹目录

@@ -15,31 +15,29 @@
  */
 package cn.ajsgn.generator2;
 
-import cn.ajsgn.generator2.core.strategy.impl.MavenProjectGeneratorStrategy;
+import cn.ajsgn.generator2.core.strategy.impl.BcProjectGeneratorStrategy;
 
-public class MavenProjectGenerator2Test {
+public class BcProjectGeneratorStrategyTest {
 	
 	public static void main(String[] args) {
 		
-		MavenProjectGeneratorStrategy mavenProject = new MavenProjectGeneratorStrategy.Builder("bc-project-test", "cn/ajsgn/generator2/template/maven/blankPom.xml.vm")//
-				.baseOutFolderPath("d:/generator2/project")	//
+		BcProjectGeneratorStrategy bcProject = new BcProjectGeneratorStrategy.Builder("bc-project-test")//
 				.artifactId("bc.project.test")	//
-				.groupId("bc.project.test")	//
+				.baseOutFolderPath("d:/generator2/project")	//
 				.encode("UTF-8")	//
+				.groupId("bc.project.test")	//
 				.name("generator project for testing")	//
-				.packaging(MavenProjectGeneratorStrategy.MavenPackagingType.WAR)	//
 				.url("http://www.apache.org")	//
 				.version("0.0.1-SNATSHOT")	//
-				.withSrcFolder(true)	//
+				.basePackage("cn.ajsgn.generator2.test")
 				.build();
 		
 		
-		Generator2.generator(mavenProject);
+		Generator2.generator(bcProject);
 		
 		
 		
 	}
-	
 	
 	
 }

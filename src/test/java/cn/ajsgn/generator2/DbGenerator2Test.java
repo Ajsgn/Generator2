@@ -24,9 +24,9 @@ public class DbGenerator2Test {
 	@Test
 	public void test() { 
 		
-		DbTableFileGeneratorStrategy mysql = new DbTableFileGeneratorStrategy.Builder("root", "123456", "jdbc:mysql://localhost:3306/bc_eleme_platform", "com.mysql.jdbc.Driver")
+		DbTableFileGeneratorStrategy mysql = new DbTableFileGeneratorStrategy.Builder("root", "123456", "jdbc:mysql://localhost:3306/test", "com.mysql.jdbc.Driver")
 				.baseOutFolderPath("d:/generator2/mysql/xxx")	//
-				.basePackage("cn.ajsgn.generator2", DefaultPackageNameCreator.singletonInstance())	//
+				.basePackage("cn.ajsgn.generator2.test", DefaultPackageNameCreator.singletonInstance())	//
 				.build()	//
 				.withAbstract()	//
 				.withTable("test", "table1", "Table1", new String[] {"ID"})	//

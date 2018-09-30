@@ -28,7 +28,7 @@ import ${_modelPackage}.${_className};
  * <p>${_className}数据层的基础操作</p>
  * @ClassName: ${_daoImplClassName}
  * @Description: ${_className}数据层的基础操作
- * @author Generator
+ * @author Generator2
  * @date ${_createDate}
  */
 @Repository

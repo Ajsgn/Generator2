@@ -43,19 +43,33 @@ import cn.ajsgn.generator2.db.names.DefaultPackageNameCreator;
 import cn.ajsgn.generator2.db.names.PackageNameCreator;
 import cn.ajsgn.generator2.vm.VolecityInstance;
 
+/**
+ * <p>数据库文件生成策略</p>
+ * @ClassName: DbTableFileGeneratorStrategy
+ * @Description: 数据库文件生成策略
+ * @author Ajsgn@foxmail.com
+ * @date 2018年9月30日 下午4:33:17
+ */
 public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
-	
+	//数据库用户名
 	private String user;
+	//数据库密码
 	private String password;
+	//jdbc连接
 	private String jdbcUrl;
+	//连接驱动类
 	private String driverClass;
 	
+	//数据库连接对象
 	private Connection dbConnection;
 	
+	//输出文件目录路径
 	private String baseOutFolderPath;
 	
+	//基础包结构
 	private String basePackage;
 	
+	// >> package目录结构
 	private String absCommonPackage;
 	private String baseModelPackage;
 	private String modelPackage;
@@ -68,8 +82,10 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 	private String daoPackage;
 	private String daoImplPackage;
 	
+	//数据库列映射
 	private ColumnMapping columnMapping;
 	
+	//待生成输出的文件集合
 	private List<FileTemplate> files = new ArrayList<FileTemplate>();
 	
 	private DbTableFileGeneratorStrategy(Builder builder) {
@@ -108,7 +124,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 	private DbTableFileGeneratorStrategy setBasePackage(String basePackage, PackageNameCreator packageNameCreator) {
 		packageNameCreator = packageNameCreator == null ? DefaultPackageNameCreator.singletonInstance() : packageNameCreator;
 		this.basePackage = StringUtils.defaultIfBlank(basePackage, "");
-		
+		//文件包结构创建
 		this.absCommonPackage = packageNameCreator.absCommonPackage(this.basePackage);
 		this.baseModelPackage = packageNameCreator.baseModelPackage(this.basePackage);
 		this.modelPackage = packageNameCreator.modelPackage(this.basePackage);
@@ -122,11 +138,31 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		return this;
 	}
 	
+	/**
+	 * <p>创建抽象文件<p>
+	 * @Title: withAbstract
+	 * @Description: 创建抽象文件
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月30日 下午4:36:59
+	 * @return DbTableFileGeneratorStrategy 
+	 */
 	public DbTableFileGeneratorStrategy withAbstract() {
 		generatorAbstract();
 		return this;
 	}
 	
+	/**
+	 * <p>创建一张数据库表对应的文件<p>
+	 * @Title: withTable
+	 * @Description: 创建一张数据库表对应的文件
+	 * @param schemaName 数据库表对应的schemaName
+	 * @param tableName 表名称
+	 * @param className 表对应的类名称
+	 * @param primaryKeys 表中的主键数组
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月30日 下午4:37:20
+	 * @return DbTableFileGeneratorStrategy 对应的生成策略
+	 */
 	public DbTableFileGeneratorStrategy withTable(String schemaName, String tableName, String className, String[] primaryKeys) {
 		try {
 			DatabaseMetaData databaseMetaData = this.dbConnection.getMetaData();
@@ -138,6 +174,18 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		return this;
 	}
 	
+	/**
+	 * <p>表文件生成<p>
+	 * @Title: tableGeneratory
+	 * @Description: 表文件生成
+	 * @param schemaName 数据库表对应的schemaName
+	 * @param tableName 表名称
+	 * @param className 表对应的类名称
+	 * @param columnInfos 数据库表信息
+	 * @param primaryKeys 表中的主键数组
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月30日 下午4:39:16
+	 */
 	private void tableGeneratory(String schemaName, String tableName, String className, List<ColumnInfo> columnInfos, String[] primaryKeys) {
 		//class name
 		className = String.valueOf(className);	//Model
@@ -212,6 +260,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 	
 	}
 	
+	//生成抽象类
 	private void generatorAbstract() {
 		generatorAbstractDaoImpl();
 		generatorBaseDao();
@@ -219,6 +268,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		generatorDaoCondition();
 	}
 	
+	//生成daoImpl
 	private void generatorAbstractDaoImpl() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_basePackage", this.absCommonPackage);
@@ -226,6 +276,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.absCommonPackage, "AbstractDaoImpl.java", "cn/ajsgn/generator2/template/db/abs/AbstractDaoImpl.vm", params));
 	}
 	
+	//生成dao
 	private void generatorBaseDao() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_basePackage", this.absCommonPackage);
@@ -233,6 +284,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.absCommonPackage, "BaseDao.java", "cn/ajsgn/generator2/template/db/abs/BaseDao.vm", params));
 	}
 	
+	//生成Mapper
 	private void generatorBaseMapper() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_basePackage", this.absCommonPackage);
@@ -240,6 +292,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.absCommonPackage, "BaseMapper.java", "cn/ajsgn/generator2/template/db/abs/BaseMapper.vm", params));
 	}
 	
+	//生成DaoCondition
 	private void generatorDaoCondition() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_basePackage", this.absCommonPackage);
@@ -247,6 +300,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		files.add(new PackageFileTemplate(this.baseOutFolderPath, this.absCommonPackage, "DaoCondition.java", "cn/ajsgn/generator2/template/db/abs/DaoCondition.vm", params));
 	}
 	
+	//获取表中所有列的ColumnInfo
 	private List<ColumnInfo> columnInfos(DatabaseMetaData databaseMetaData, String schemaName, String tableName) throws SQLException{
 		schemaName = StringUtils.isBlank(schemaName) ? user : schemaName;
 		List<ColumnInfo> list = new ArrayList<ColumnInfo>(23);
@@ -304,6 +358,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		return primaryKeys;
 	}
 
+	//生成文件
 	@Override
 	public void generator(VolecityInstance vm) {
 		this.files.forEach(file -> {
@@ -316,6 +371,7 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		releaseConnection();
 	}
 	
+	//释放数据库连接
 	private void releaseConnection() {
 		if(null != this.dbConnection) {
 			try {
@@ -326,6 +382,13 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 		}
 	}
 
+	/**
+	 * <p>数据库文件生成策略的生成器</p>
+	 * @ClassName: Builder
+	 * @Description: 数据库文件生成策略的生成器
+	 * @author Ajsgn@foxmail.com
+	 * @date 2018年9月30日 下午4:42:50
+	 */
 	public static final class Builder {
 		
 		private String user;
@@ -346,6 +409,15 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 			this.driverClass = driverClass;
 		}
 		
+		/**
+		 * <p>设置输出文件目录路径<p>
+		 * @Title: baseOutFolderPath
+		 * @Description: 设置输出文件目录路径
+		 * @param baseOutFolderPath 输出文件目录路径
+		 * @author Ajsgn@foxmail.com
+		 * @date 2018年9月30日 下午4:43:21
+		 * @return Builder 当前对象
+		 */
 		public Builder baseOutFolderPath(String baseOutFolderPath) {
 			if(false == StringUtils.isBlank(baseOutFolderPath)) {
 				this.baseOutFolderPath = baseOutFolderPath;
@@ -353,12 +425,31 @@ public class DbTableFileGeneratorStrategy implements GeneratorStrategy {
 			return this;
 		}
 		
+		/**
+		 * <p>设置文件的包结构<p>
+		 * @Title: basePackage
+		 * @Description: 设置文件的包结构
+		 * @param basePackage 基础包结构
+		 * @param packageNameCreator 包结构生成策略
+		 * @author Ajsgn@foxmail.com
+		 * @date 2018年9月30日 下午4:43:24
+		 * @return Builder 当前对象
+		 */
 		public Builder basePackage(String basePackage, PackageNameCreator packageNameCreator) {
-			this.basePackage = basePackage;
-			this.packageNameCreator = packageNameCreator;
+			this.basePackage = StringUtils.isBlank(basePackage) ? "" : basePackage;
+			if(null != packageNameCreator)
+				this.packageNameCreator = packageNameCreator;
 			return this;
 		}
 		
+		/**
+		 * <p>构建数据库生成策略<p>
+		 * @Title: build
+		 * @Description: 构建数据库生成策略
+		 * @author Ajsgn@foxmail.com
+		 * @date 2018年9月30日 下午4:43:27
+		 * @return DbTableFileGeneratorStrategy 数据库文件生成策略
+		 */
 		public DbTableFileGeneratorStrategy build() {
 			DbTableFileGeneratorStrategy strategy = new DbTableFileGeneratorStrategy(this);
 			return strategy;

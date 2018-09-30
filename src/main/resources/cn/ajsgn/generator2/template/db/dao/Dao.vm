@@ -23,7 +23,7 @@ import ${_daoConditionPackage}.${_daoConditionClassName};
  * <p>${_className}数据层的基础操作</p>
  * @ClassName: ${_daoClassName}
  * @Description: ${_className}数据层的基础操作
- * @author Generator
+ * @author Generator2
  * @date ${_createDate}
  */
 public interface ${_daoClassName} extends BaseDao<${_className}, ${_daoConditionClassName}> {

@@ -139,6 +139,7 @@ public class BcProjectGeneratorStrategy implements GeneratorStrategy {
 		String webPackage = basePackage.concat(".web");
 		webFileParam.put("_basePackage", basePackage);
 		webFileParam.put("_webPackage", basePackage.concat(".web"));
+		webFileParam.put("_createDate", nowFormatDate);
 		web.withJavaFile("cn/ajsgn/generator2/template/maven/bc/java/Application.java.vm", webPackage, "Application.java", webFileParam);
 		
 		//generator

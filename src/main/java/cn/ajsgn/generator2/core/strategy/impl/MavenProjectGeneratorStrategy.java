@@ -105,7 +105,7 @@ public class MavenProjectGeneratorStrategy implements GeneratorStrategy {
 			.append(projectName).append(File.separator)	//
 			.append("src").append(File.separator)	//
 			.append("main").append(File.separator)	//
-			.append("resource").append(File.separator);
+			.append("resources").append(File.separator);
 		
 		files.add(new PackageFileTemplate(basePath.toString(), packageName, className, resourceFileTemplateResource, params));
 		return this;
@@ -153,7 +153,7 @@ public class MavenProjectGeneratorStrategy implements GeneratorStrategy {
 			.append(projectName).append(File.separator)	//
 			.append("src").append(File.separator)	//
 			.append("test").append(File.separator)	//
-			.append("resource").append(File.separator);
+			.append("resources").append(File.separator);
 		
 		files.add(new PackageFileTemplate(basePath.toString(), packageName, className, resourceFileTemplateResource, params));
 		return this;
@@ -259,7 +259,7 @@ public class MavenProjectGeneratorStrategy implements GeneratorStrategy {
 				.append(projectPath).append(File.separator)	//
 				.append("src").append(File.separator)	//
 				.append("main").append(File.separator)	//
-				.append("resource").append(File.separator);
+				.append("resources").append(File.separator);
 		files.add(CommonFileTemplate.folderTemplate(srcMainResourceSb.toString()));
 		// src/test/java
 		StringBuilder srcTestJavaSb = new StringBuilder()	//
@@ -273,7 +273,7 @@ public class MavenProjectGeneratorStrategy implements GeneratorStrategy {
 				.append(projectPath).append(File.separator)	//
 				.append("src").append(File.separator)	//
 				.append("test").append(File.separator)	//
-				.append("resource").append(File.separator);
+				.append("resources").append(File.separator);
 		files.add(CommonFileTemplate.folderTemplate(srcTestResourceSb.toString()));
 	}
 

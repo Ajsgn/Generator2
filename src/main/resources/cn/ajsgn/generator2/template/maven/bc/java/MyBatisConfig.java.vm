@@ -69,7 +69,7 @@ public class MyBatisConfig implements TransactionManagementConfigurer {
 		sqlSessionFactoryBean.setDataSource(dataSource());
 
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-		sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mybatis/*.xml"));
+		sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mybatis/**/*.xml"));
 		//pageHelper 4.1.5 and  MyBatis 3.4.0 
 		sqlSessionFactoryBean.setPlugins(new Interceptor[] { pageHelper });
 		return sqlSessionFactoryBean.getObject();

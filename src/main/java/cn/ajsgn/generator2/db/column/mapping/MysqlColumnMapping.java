@@ -39,6 +39,7 @@ class MysqlColumnMapping extends AbstractColumnMapping {
 		addColumnClassName("INT","java.lang.Integer");
 		addColumnClassName("INT UNSIGNED","java.lang.Integer");
 		addColumnClassName("BIGINT","java.lang.Long");
+		addColumnClassName("BIGINT UNSIGNED","java.lang.Long");
 		addColumnClassName("BINARY","java.lang.Byte[]");
 		addColumnClassName("BIT","java.lang.Boolean");
 		addColumnClassName("BLOB","java.lang.Byte[]");
